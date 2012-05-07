@@ -31,6 +31,8 @@ app.get('/oauth_cb', function(req, res) {
                     req.session.oa._authorize_callback,
                     req.session.oa._signatureMethod);
 
+                    console.log(req.session.oauth_token, req.session.oauth_token_secret);
+
   oa.getOAuthAccessToken(
     req.session.oauth_token,
     req.session.oauth_token_secret,
@@ -52,12 +54,12 @@ app.get('/oauth_cb', function(req, res) {
 });
 
 
-app.get('/oauth_login', function(req, res) {
+app.get('/l', function(req, res) {
   var getRequestTokenUrl = "https://www.boredatbaker.com/api/v1/oauth/request_token";
 
 
   var oa = new OAuth(getRequestTokenUrl,
-                    "https://www.boredatbaker.com/api/v1/oauth/request_token",
+                    "https://www.boredatbaker.com/api/v1/oauth/access_token",
                     "31324ebdc01f728d820a282ab04d555604fa2ff3f",
                     "a0997237fe6e9363407df63eaa05f190",
                     "1.0",
@@ -93,9 +95,7 @@ app.get('/posts', function(req, res) {
   console.log(oa);
   console.log(req.session);
 
-  oa.getProtectedResource(
-    "http://www.boredatbaker.com/api/v1/posts",
-    "GET",
+  oa.get("http://www.boredatbaker.com/api/v1/posts",
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
