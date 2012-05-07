@@ -1,1 +1,8 @@
 div.container
+
+  - each post in data
+    div.row
+      div.post.span12.well
+        p #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
+        p #{post.postText}
+        p #{post.postTotalReplies} replies
