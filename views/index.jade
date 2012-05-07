@@ -1,8 +1,14 @@
-div.container
 
-  - each post in data
-    div.row
-      div.post.span12.well
-        p #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
-        p #{post.postText}
-        p #{post.postTotalReplies} replies
+div(data-role='page')
+  div(data-role='header')
+    h1 Title
+
+  div(data-role='content')
+    ul(data-role='listview', data-inset='true')
+      - each post in data
+        li
+          a(href='#')
+            h3 #{post.postText}
+            p #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
+            p
+              span.ui-li-count #{post.postTotalReplies}
