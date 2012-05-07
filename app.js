@@ -16,6 +16,15 @@ app.use(express.session({secret: "asdklasl3"}));
 
 // App
 
+function require_login(req, res, next) {
+  if(!req.session.oauth_access_token) {
+    res.redirect("/l"); //?action="+querystring.escape(req.originalUrl));
+    return;
+  }
+  next();
+};
+
+
 app.get('/', function(req, res) {
   res.render('index', {
 
@@ -31,8 +40,6 @@ app.get('/oauth_cb', function(req, res) {
                     req.session.oa._authorize_callback,
                     req.session.oa._signatureMethod);
 
-                    console.log(req.session.oauth_token, req.session.oauth_token_secret);
-
   oa.getOAuthAccessToken(
     req.session.oauth_token,
     req.session.oauth_token_secret,
@@ -44,7 +51,6 @@ app.get('/oauth_cb', function(req, res) {
       }
       else {
         // store the access token in the session
-        console.log(error, oauth_access_token, oauth_access_token_secret, results2)
         req.session.oauth_access_token = oauth_access_token;
         req.session.oauth_access_token_secret = oauth_access_token_secret;
 
@@ -82,8 +88,7 @@ app.get('/l', function(req, res) {
   })
 });
 
-app.get('/posts', function(req, res) {
-  console.log('loading psts');
+app.get('/posts', require_login, function(req, res) {
   var oa = new OAuth(req.session.oa._requestUrl,
                     req.session.oa._accessUrl,
                     req.session.oa._consumerKey,
@@ -92,18 +97,13 @@ app.get('/posts', function(req, res) {
                     req.session.oa._authorize_callback,
                     req.session.oa._signatureMethod);
 
-  console.log(oa);
-  console.log(req.session);
-
   oa.get("http://www.boredatbaker.com/api/v1/posts",
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
 
       var feed = JSON.parse(data);
-
       res.send(feed);
-
     });
 });
 
