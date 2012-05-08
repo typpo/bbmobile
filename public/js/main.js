@@ -7,9 +7,11 @@ $(function() {
 
   var lastUpdated = new Date().getTime();
   setInterval(function() {
-    $.get('/posts/since/' + lastUpdated, function(data) {
+    $.getJSON('/posts/since/' + lastUpdated, function(data) {
       console.log(data);
-      $(data.add).hide().prependTo('#posts').fadeIn().trigger;
+      $(data.add).hide().prependTo('#posts').fadeIn();
+      $('#posts').listview('refresh');
+      $('.prettydate').prettyDate();
     });
     lastUpdated = new Date().getTime();
   }, 30000);

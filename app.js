@@ -111,8 +111,6 @@ app.get('/posts/since/:since', require_login, function(req, res) {
       tpl = fs.readFileSync(path.join(__dirname, 'views/post.jade'), 'utf8');
       tpl = jade.compile(tpl, { pretty: false, filename: 'views/post.jade' });
       var addhtml = tpl({ post: post });
-      console.log(post);
-      console.log(addhtml);
       html += addhtml;
     });
 
