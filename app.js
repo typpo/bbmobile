@@ -81,27 +81,37 @@ app.get('/login', function(req, res) {
   })
 });
 
-app.get('/posts/:since', require_login, function(req, res) {
+function getPosts(cb) {
   oa.get("http://www.boredatbaker.com/api/v1/posts",
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
       var feed = JSON.parse(data);
-      var since = parseInt(req.params.since);
-      if (since > 0) {
-        // Filter out any posts before this timestamp
-        // We don't handle deleted posts or anything, because the api isn't conducive to this
-
-        feed = _.filter(feed, function(post) {
-          var d = new Date(post.postCreated.replace(' ',''));
-          console.log(d.getTime());
-          return d.getTime() > since;
-        });
-      }
-      res.render('index', {
-        data: feed,
-      });
+      cb(feed);
     });
+}
+
+app.get('/posts/changed/:since', require_login, function(req, res) {
+    var since = parseInt(req.params.since);
+    if (since > 0) {
+      // Filter out any posts before this timestamp
+      // We don't handle deleted posts or anything, because the api isn't conducive to this
+      feed = _.filter(feed, function(post) {
+        var d = new Date(post.postCreated.replace(' ',''));
+        return d.getTime() > since;
+      });
+    }
+    res.send({
+      data: feed,
+    });
+});
+
+app.get('/posts', require_login, function(req, res) {
+  getPosts(function(feed) {
+    res.render('index', {
+      data: feed,
+    });
+  });
 });
 
 app.get('/thread/:id', require_login, function(req, res) {
