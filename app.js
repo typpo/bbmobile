@@ -11,7 +11,9 @@ app.use(express.cookieParser());
 app.use(express.favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.bodyParser());
-app.use(express.session({secret: "asdklasl3"}));
+//app.use(express.session({secret: "asdklasl3"}));
+var RedisStore = require('connect-redis')(express);
+app.use(express.session({secret: "barkbark3. barkbarkbark", store: new RedisStore}));
 
 // Oauth config
 var oa = new OAuth("https://www.boredatbaker.com/api/v1/oauth/request_token",
@@ -85,7 +87,6 @@ app.get('/posts/:since', require_login, function(req, res) {
     req.session.oauth_access_token_secret,
     function (error, data, response) {
       var feed = JSON.parse(data);
-
       var since = parseInt(req.params.since);
       if (since > 0) {
         // Filter out any posts before this timestamp
@@ -93,10 +94,10 @@ app.get('/posts/:since', require_login, function(req, res) {
 
         feed = _.filter(feed, function(post) {
           var d = new Date(post.postCreated.replace(' ',''));
+          console.log(d.getTime());
           return d.getTime() > since;
         });
       }
-
       res.render('index', {
         data: feed,
       });
