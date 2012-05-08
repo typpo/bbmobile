@@ -40,7 +40,7 @@ function require_login(req, res, next) {
 
 
 app.get('/', require_login, function(req, res) {
-  res.redirect('/posts/-1');
+  res.redirect('/posts');
 });
 
 app.get('/oauth_cb', function(req, res) {
@@ -114,8 +114,12 @@ app.get('/posts/since/:since', require_login, function(req, res) {
       html += addhtml;
     });
 
+    var changed = {};
+    // TODO need to find any changes..
+
     res.send({
       add: html,
+      changed: changed,
     });
   });
 });
