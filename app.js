@@ -1,5 +1,7 @@
 var express = require('express')
   , fs = require('fs')
+  , path = require('path')
+  , jade = require('jade')
   , _ = require('underscore')
   , app = express.createServer()
   , OAuth = require('oauth').OAuth
@@ -99,7 +101,7 @@ app.get('/posts/since/:since', require_login, function(req, res) {
       // Filter out any posts before this timestamp
       // We don't handle deleted posts or anything, because the api isn't conducive to this
       feed = _.filter(feed, function(post) {
-        var d = new Date(post.postCreated.replace(' ',''));
+        var d = new Date(post.postCreated.replace(' ','T'));
         return d.getTime() > since;
       });
     }
@@ -108,7 +110,10 @@ app.get('/posts/since/:since', require_login, function(req, res) {
     _.map(feed, function(post) {
       tpl = fs.readFileSync(path.join(__dirname, 'views/post.jade'), 'utf8');
       tpl = jade.compile(tpl, { pretty: true, filename: 'views/post.jade' });
-      html += tpl({ post: post });
+      var addhtml = tpl({ post: post });
+      console.log(post);
+      console.log(addhtml);
+      html += addhtml;
     });
 
     res.send({
