@@ -9,7 +9,7 @@ $(function() {
   setInterval(function() {
     $.get('/posts/since/' + lastUpdated, function(data) {
       console.log(data);
-      $(data.add).hide().prependTo('#posts').fadeIn();
+      $(data.add).hide().prependTo('#posts').fadeIn().trigger;
     });
     lastUpdated = new Date().getTime();
   }, 30000);

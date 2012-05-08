@@ -109,7 +109,7 @@ app.get('/posts/since/:since', require_login, function(req, res) {
     var html = '';
     _.map(feed, function(post) {
       tpl = fs.readFileSync(path.join(__dirname, 'views/post.jade'), 'utf8');
-      tpl = jade.compile(tpl, { pretty: true, filename: 'views/post.jade' });
+      tpl = jade.compile(tpl, { pretty: false, filename: 'views/post.jade' });
       var addhtml = tpl({ post: post });
       console.log(post);
       console.log(addhtml);
@@ -133,6 +133,7 @@ app.get('/posts', require_login, function(req, res) {
 app.get('/thread/:id', require_login, function(req, res) {
 
 });
+
 app.post('/agree/:id', require_login, function(req, res) {
 
 });
