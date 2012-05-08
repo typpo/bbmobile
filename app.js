@@ -81,7 +81,7 @@ app.get('/login', function(req, res) {
   })
 });
 
-function getPosts(cb) {
+function getPosts(req, cb) {
   oa.get("http://www.boredatbaker.com/api/v1/posts",
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
@@ -91,7 +91,8 @@ function getPosts(cb) {
     });
 }
 
-app.get('/posts/changed/:since', require_login, function(req, res) {
+app.get('/posts/since/:since', require_login, function(req, res) {
+  getPosts(req, function() {
     var since = parseInt(req.params.since);
     if (since > 0) {
       // Filter out any posts before this timestamp
@@ -104,10 +105,11 @@ app.get('/posts/changed/:since', require_login, function(req, res) {
     res.send({
       data: feed,
     });
+  });
 });
 
 app.get('/posts', require_login, function(req, res) {
-  getPosts(function(feed) {
+  getPosts(req, function(feed) {
     res.render('index', {
       data: feed,
     });

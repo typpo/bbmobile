@@ -6,12 +6,4 @@ div(data-role='page')
   div(data-role='content')
     ul(data-role='listview', data-inset='true')
       - each post in data
-        li
-          a(href='#')
-            h3 #{post.postText}
-            p
-              span.prettydate(title='#{post.postCreated.replace(' ','T')}')
-              | ...
-              #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
-            p
-              span.ui-li-count #{post.postTotalReplies}
+        include post

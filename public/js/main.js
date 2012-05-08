@@ -4,6 +4,14 @@ $(function() {
   setInterval(function() {
     $('.prettydate').prettyDate();
   }, 5000);
+
+  var lastUpdated = new Date().getTime();
+  setInterval(function() {
+    $.get('/posts/since/' + lastUpdated, function(data) {
+
+    });
+    lastUpdated = new Date().getTime();
+  }, 30000);
 });
 
 /*
