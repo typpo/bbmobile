@@ -1,4 +1,5 @@
 var express = require('express')
+  , fs = require('fs')
   , _ = require('underscore')
   , app = express.createServer()
   , OAuth = require('oauth').OAuth
@@ -92,7 +93,7 @@ function getPosts(req, cb) {
 }
 
 app.get('/posts/since/:since', require_login, function(req, res) {
-  getPosts(req, function() {
+  getPosts(req, function(feed) {
     var since = parseInt(req.params.since);
     if (since > 0) {
       // Filter out any posts before this timestamp
@@ -102,8 +103,16 @@ app.get('/posts/since/:since', require_login, function(req, res) {
         return d.getTime() > since;
       });
     }
+
+    var html = '';
+    _.map(feed, function(post) {
+      tpl = fs.readFileSync(path.join(__dirname, 'views/post.jade'), 'utf8');
+      tpl = jade.compile(tpl, { pretty: true, filename: 'views/post.jade' });
+      html += tpl({ post: post });
+    });
+
     res.send({
-      data: feed,
+      add: html,
     });
   });
 });

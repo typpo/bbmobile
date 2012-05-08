@@ -4,6 +4,6 @@ div(data-role='page')
     h1 b@mobile
 
   div(data-role='content')
-    ul(data-role='listview', data-inset='true')
+    ul#posts(data-role='listview', data-inset='true')
       - each post in data
         include post

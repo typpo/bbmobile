@@ -3,11 +3,13 @@ $(function() {
   $('.prettydate').prettyDate();
   setInterval(function() {
     $('.prettydate').prettyDate();
-  }, 5000);
+  }, 60000);
 
   var lastUpdated = new Date().getTime();
   setInterval(function() {
     $.get('/posts/since/' + lastUpdated, function(data) {
+      console.log(data);
+      $('#posts').prepend(data.add);
 
     });
     lastUpdated = new Date().getTime();
