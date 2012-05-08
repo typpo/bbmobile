@@ -9,7 +9,9 @@ div(data-role='page')
         li
           a(href='#')
             h3 #{post.postText}
-            p #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
-            p.prettydate(title='#{post.postCreated.replace(' ','T')}')
+            p
+              span.prettydate(title='#{post.postCreated.replace(' ','T')}')
+              | ...
+              #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
             p
               span.ui-li-count #{post.postTotalReplies}
