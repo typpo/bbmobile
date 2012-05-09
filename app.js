@@ -128,6 +128,7 @@ app.get('/posts', require_login, function(req, res) {
   getPosts(req, function(feed) {
     res.render('index', {
       data: feed,
+      reply_context: -1,
     });
   });
 });
@@ -141,6 +142,7 @@ app.get('/thread/:id', require_login, function(req, res) {
       orig: indiv_post,
       // TODO replies API is broken
       replies: replies ? [replies] : [],
+      reply_context: req.params.id,
     });
   });
 
@@ -160,6 +162,7 @@ app.get('/thread/:id', require_login, function(req, res) {
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
+      console.log(data, response);
       replies = JSON.parse(data);
       if (replies.error)
         replies = null;
