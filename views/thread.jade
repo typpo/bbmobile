@@ -1,0 +1,16 @@
+div#page-thread(data-role='page')
+  div(data-role='header')
+    a(href='#', data-rel='back', data-icon='arrow-l') Back
+    h1 Thread view
+
+  div(data-role='content')
+    h3.post-text #{orig.postText}
+    p
+      span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
+      | ...
+      #{orig.postTotalAgrees} agrees / #{orig.postTotalDisagrees} disagrees / #{orig.postTotalNewsworthies} newsworthies
+
+    - if (replies.length > 0)
+      ul#replies(data-role='listview', data-inset='true')
+        - each post in replies
+          include post

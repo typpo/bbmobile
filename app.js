@@ -132,6 +132,41 @@ app.get('/posts', require_login, function(req, res) {
   });
 });
 
+
+app.get('/thread/:id', require_login, function(req, res) {
+
+  var indiv_post, replies;
+  var complete = _.after(2, function() {
+    res.render('thread', {
+      orig: indiv_post,
+      // TODO replies API is broken
+      replies: replies ? [replies] : [],
+    });
+  });
+
+  // Fetch actual post
+  oa.get("http://www.boredatbaker.com/api/v1/post?id="+req.params.id,
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      indiv_post = JSON.parse(data);
+      if (indiv_post.error)
+        indiv_post = null;
+      complete();
+    });
+
+  // And fetch replies
+  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+req.params.id,
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      replies = JSON.parse(data);
+      if (replies.error)
+        replies = null;
+      complete();
+    });
+});
+
 app.get('/thread/:id', require_login, function(req, res) {
 
 });
