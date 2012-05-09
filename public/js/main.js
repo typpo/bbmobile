@@ -1,9 +1,19 @@
 
 $(function() {
+  $(document).bind("mobileinit", function(){
+
+    $.mobile.buttonMarkup.hoverDelay = 0;
+    $.mobile.touchOverflowEnabled = true;
+
+  });
+
+
+  /*
   $('.prettydate').prettyDate();
   setInterval(function() {
     $('.prettydate').prettyDate();
   }, 60000);
+  */
 
   var lastUpdated = new Date().getTime();
   setInterval(function() {
@@ -16,6 +26,10 @@ $(function() {
     lastUpdated = new Date().getTime();
   }, 30000);
 });
+
+function loadThread(id) {
+  $.mobile.changePage('/thread/' + id);
+}
 
 /*
  * JavaScript Pretty Date

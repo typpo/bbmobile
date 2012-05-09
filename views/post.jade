@@ -1,10 +1,11 @@
-li(data-theme='#{post.postTotalReplies < 5 ? 'a' : 'e'}')
-  a(href='/thread/#{post.postId}')
-    h3.post-text #{post.postText}
+li(data-theme='#{post.postTotalReplies < 5 ? 'a' : 'e'}', onClick='loadThread(#{post.postId});return false;')
+  //
+    a(href='/thread/#{post.postId}')
+  h3.post-text #{post.postText}
+  p
+    span.prettydate.post-date(title='#{post.postCreated.replace(' ','T')}')
+    | ...
+    #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
+  - if (post.postTotalReplies > 0)
     p
-      span.prettydate.post-date(title='#{post.postCreated.replace(' ','T')}')
-      | ...
-      #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
-    - if (post.postTotalReplies > 0)
-      p
-        span.ui-li-count #{post.postTotalReplies}
+      span.ui-li-count #{post.postTotalReplies}

@@ -163,7 +163,6 @@ app.get('/thread/:id', require_login, function(req, res) {
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
-      console.log(data, response);
       replies = JSON.parse(data);
       if (replies.error)
         replies = null;
@@ -171,16 +170,14 @@ app.get('/thread/:id', require_login, function(req, res) {
     });
 });
 
-app.get('/thread/:id', require_login, function(req, res) {
-
-});
-
 app.post('/agree/:id', require_login, function(req, res) {
 
 });
+
 app.post('/disagree/:id', require_login, function(req, res) {
 
 });
+
 app.post('/newsworthy/:id', require_login, function(req, res) {
 
 });

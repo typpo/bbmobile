@@ -1,3 +1,4 @@
 .ui-page {
+  /* Fixes jqm blinking bug */
   -webkit-backface-visibility: hidden;
 }

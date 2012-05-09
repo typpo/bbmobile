@@ -1,7 +1,16 @@
 !!!
 html
   head
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     title b@mobile
     include includes
+    style
+      *.ui-listview *.ui-btn-up-c,
+      *.ui-listview *.ui-btn-down-c,
+      *.ui-listview *.ui-btn-hover-c
+        {
+        /* Copy your .ui-btn-up styles here */
+        }
   body
     div.container!= body

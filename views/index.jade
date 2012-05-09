@@ -1,10 +1,10 @@
 
-div#page-main(data-role='page')
+div#page-main(data-role='page', data-dom-cache='true')
   div(data-role='header')
     h1 b@mobile
 
   div(data-role='content')
     include write
-    ul#posts(data-role='listview', data-inset='true')
+    ul#posts(data-role='listview')
       - each post in data
         include post
