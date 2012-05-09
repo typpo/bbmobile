@@ -213,8 +213,8 @@ function makePost(id, req, res) {
     params,
     function (error, data, response) {
       console.error(data);
-      if (req.params.id > -1)
-        res.redirect('/thread/' + req.params.id);
+      if (id > -1)
+        res.redirect('/thread/' + id);
       else
         res.redirect('/posts');
     });
@@ -224,4 +224,3 @@ var port = process.env.PORT || 10000;
 app.listen(port);
 
 console.log('Started listening on port 10000');
-

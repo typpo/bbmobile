@@ -1,3 +1,3 @@
 #!/bin/sh
 
-nohup hotnode app.js &
+nohup hotnode srv/app.js &
