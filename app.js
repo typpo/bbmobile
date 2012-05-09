@@ -134,6 +134,10 @@ app.get('/posts', require_login, function(req, res) {
   });
 });
 
+app.post('/posts', require_login, function(req, res) {
+  makePost(-1, req, res);
+});
+
 
 app.get('/thread/:id', require_login, function(req, res) {
 
@@ -182,27 +186,39 @@ app.post('/newsworthy/:id', require_login, function(req, res) {
 
 });
 
-app.post('/write/:id', require_login, function(req, res) {
+app.post('/thread/:id', require_login, function(req, res) {
   var id = parseInt(req.params.id);
   if (isNaN(id)) {
     res.send('');
     return;
   }
-  var post_string = 'text=' + encodeURIComponent(req.body.text);
-  post_string += id > -1 ? '&id=' + id : '';
+  makePost(id, req, res);
+});
 
-  oa.post("http://www.boredatbaker.com/api/v1/post?" + post_string,
+function makePost(id, req, res) {
+  if (!req.body.text) {
+    res.send('');
+    return;
+  }
+
+  var params = {
+    text: req.body.text,
+    anonymously: 1,
+  };
+  if (id > -1) params.id = id;
+
+  oa.post("http://www.boredatbaker.com/api/v1/post",
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
-    null,
+    params,
     function (error, data, response) {
-      console.log(error, data);
+      console.error(data);
       if (req.params.id > -1)
         res.redirect('/thread/' + req.params.id);
       else
         res.redirect('/posts');
     });
-});
+}
 
 var port = process.env.PORT || 10000;
 app.listen(port);
