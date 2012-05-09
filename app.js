@@ -183,7 +183,25 @@ app.post('/newsworthy/:id', require_login, function(req, res) {
 });
 
 app.post('/write/:id', require_login, function(req, res) {
+  var id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    res.send('');
+    return;
+  }
+  var post_string = 'text=' + encodeURIComponent(req.body.text);
+  post_string += id > -1 ? '&id=' + id : '';
 
+  oa.post("http://www.boredatbaker.com/api/v1/post?" + post_string,
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    null,
+    function (error, data, response) {
+      console.log(error, data);
+      if (req.params.id > -1)
+        res.redirect('/thread/' + req.params.id);
+      else
+        res.redirect('/posts');
+    });
 });
 
 var port = process.env.PORT || 10000;

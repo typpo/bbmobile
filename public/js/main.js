@@ -8,17 +8,14 @@ $(function() {
   });
 
 
-  /*
   $('.prettydate').prettyDate();
   setInterval(function() {
     $('.prettydate').prettyDate();
   }, 60000);
-  */
 
   var lastUpdated = new Date().getTime();
   setInterval(function() {
     $.getJSON('/posts/since/' + lastUpdated, function(data) {
-      console.log(data);
       $(data.add).hide().prependTo('#posts').fadeIn();
       $('#posts').listview('refresh');
       $('.prettydate').prettyDate();
@@ -28,6 +25,7 @@ $(function() {
 });
 
 function loadThread(id) {
+  // performance workaround
   $.mobile.changePage('/thread/' + id);
 }
 
