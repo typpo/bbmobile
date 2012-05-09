@@ -5,6 +5,7 @@ var express = require('express')
   , _ = require('underscore')
   , app = express.createServer()
   , OAuth = require('oauth').OAuth
+  , secrets = require('./secrets.js')
 
 // Express config
 app.set('views', __dirname + '/views');
@@ -21,8 +22,8 @@ app.use(express.session({secret: "barkbark3. barkbarkbark", store: new RedisStor
 // Oauth config
 var oa = new OAuth("https://www.boredatbaker.com/api/v1/oauth/request_token",
             "https://www.boredatbaker.com/api/v1/oauth/access_token",
-            "31324ebdc01f728d820a282ab04d555604fa2ff3f",
-            "a0997237fe6e9363407df63eaa05f190",
+            secrets.key,
+            secrets.secret,
             "1.0",
             "http://ianww.com:10000/oauth_cb",
             "HMAC-SHA1");
