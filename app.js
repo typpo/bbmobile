@@ -184,6 +184,9 @@ app.post('/newsworthy/:id', require_login, function(req, res) {
 
 });
 
+app.post('/write/:id', require_login, function(req, res) {
+
+});
 
 var port = process.env.PORT || 10000;
 app.listen(port);
