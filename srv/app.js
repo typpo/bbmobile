@@ -95,6 +95,40 @@ function getPosts(req, cb) {
     });
 }
 
+function getThread(id, req, cb) {
+  var indiv_post, replies;
+  var complete = _.after(2, function() {
+    cb({
+      orig: indiv_post,
+      // TODO replies API is broken
+      replies: replies ? [replies] : [],
+      reply_context: id,
+    });
+  });
+
+  // Fetch actual post
+  oa.get("http://www.boredatbaker.com/api/v1/post?id="+id
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      indiv_post = JSON.parse(data);
+      if (indiv_post.error)
+        indiv_post = null;
+      complete();
+    });
+
+  // And fetch replies
+  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+id
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      replies = JSON.parse(data);
+      if (replies.error)
+        replies = null;
+      complete();
+    });
+}
+
 app.get('/posts/since/:since', require_login, function(req, res) {
   getPosts(req, function(feed) {
     var since = parseInt(req.params.since);
@@ -135,43 +169,21 @@ app.get('/posts', require_login, function(req, res) {
 });
 
 app.post('/posts', require_login, function(req, res) {
-  makePost(-1, req, res);
+  makePost(-1, req, function() {
+    getPosts(req, function(feed) {
+      res.render('index', {
+        data: feed,
+        reply_context: -1,
+      });
+    });
+  });
 });
 
 
 app.get('/thread/:id', require_login, function(req, res) {
-
-  var indiv_post, replies;
-  var complete = _.after(2, function() {
-    res.render('thread', {
-      orig: indiv_post,
-      // TODO replies API is broken
-      replies: replies ? [replies] : [],
-      reply_context: req.params.id,
-    });
+  getThread(req.params.id, req, function(context) {
+    res.render('thread', context);
   });
-
-  // Fetch actual post
-  oa.get("http://www.boredatbaker.com/api/v1/post?id="+req.params.id,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      indiv_post = JSON.parse(data);
-      if (indiv_post.error)
-        indiv_post = null;
-      complete();
-    });
-
-  // And fetch replies
-  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+req.params.id,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      replies = JSON.parse(data);
-      if (replies.error)
-        replies = null;
-      complete();
-    });
 });
 
 app.post('/agree/:id', require_login, function(req, res) {
@@ -192,10 +204,14 @@ app.post('/thread/:id', require_login, function(req, res) {
     res.send('');
     return;
   }
-  makePost(id, req, res);
+  makePost(id, req, function() {
+    getThread(id, req, function(context) {
+      res.send('thread', context);
+    });
+  });
 });
 
-function makePost(id, req, res) {
+function makePost(id, req, cb) {
   if (!req.body.text) {
     res.send('');
     return;
@@ -213,10 +229,7 @@ function makePost(id, req, res) {
     params,
     function (error, data, response) {
       console.error(data);
-      if (id > -1)
-        res.redirect('/thread/' + id);
-      else
-        res.redirect('/posts');
+      cb();
     });
 }
 
