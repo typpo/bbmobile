@@ -107,7 +107,7 @@ function getThread(id, req, cb) {
   });
 
   // Fetch actual post
-  oa.get("http://www.boredatbaker.com/api/v1/post?id="+id
+  oa.get("http://www.boredatbaker.com/api/v1/post?id="+id,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
@@ -118,7 +118,7 @@ function getThread(id, req, cb) {
     });
 
   // And fetch replies
-  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+id
+  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+id,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
