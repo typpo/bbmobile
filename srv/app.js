@@ -199,16 +199,37 @@ app.post('/thread/:id', require_login, function(req, res) {
 });
 
 app.post('/agree/:id', require_login, function(req, res) {
-
+  makeADN(req.params.id, req, 'agree', function() {
+    res.send('ok');
+  });
 });
 
 app.post('/disagree/:id', require_login, function(req, res) {
+  makeADN(req.params.id, req, 'disagree', function() {
+    res.send('ok');
+  });
 
 });
 
 app.post('/newsworthy/:id', require_login, function(req, res) {
-
+  makeADN(req.params.id, req, 'newsworthy', function() {
+    res.send('ok');
+  });
 });
+
+function makeADN(id, req, verb, cb) {
+  var params = {
+    id: req.params.id,
+  };
+  oa.post("http://www.boredatbaker.com/api/v1/post/agree",
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    params,
+    function (error, data, response) {
+      console.error(data);
+      cb();
+    });
+}
 
 function makePost(id, req, cb) {
   if (!req.body.text) {
