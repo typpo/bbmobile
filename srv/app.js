@@ -212,7 +212,7 @@ app.post('/newsworthy/:id', require_login, function(req, res) {
 
 function makePost(id, req, cb) {
   if (!req.body.text) {
-    res.send('');
+    cb();
     return;
   }
 

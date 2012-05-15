@@ -1,3 +1,9 @@
-form(method='post')
+form(action='javascript:submitPost()')
   textarea#text(name='text')
   button(type='submit') Post
+script
+  function submitPost() {
+    $.post(document.location.href, {text: $('#text').val()}, function(data) {
+      document.location.reload();
+    }, 'html');
+  }
