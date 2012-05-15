@@ -4,7 +4,7 @@ div#page-thread(data-role='page')
     h1 Thread view
 
   div(data-role='content')
-    h3.post-text #{orig.postText}
+    h3.post-text!= orig.postText.replace(/\\/g, '')
     p
       span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
       | ...

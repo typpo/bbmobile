@@ -100,8 +100,7 @@ function getThread(id, req, cb) {
   var complete = _.after(2, function() {
     cb({
       orig: indiv_post,
-      // TODO replies API is broken
-      replies: replies ? [replies] : [],
+      replies: replies ? replies : [],
       reply_context: id,
     });
   });
@@ -186,6 +185,19 @@ app.get('/thread/:id', require_login, function(req, res) {
   });
 });
 
+app.post('/thread/:id', require_login, function(req, res) {
+  var id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    res.send('');
+    return;
+  }
+  makePost(id, req, function() {
+    getThread(id, req, function(context) {
+      res.render('thread', context);
+    });
+  });
+});
+
 app.post('/agree/:id', require_login, function(req, res) {
 
 });
@@ -196,19 +208,6 @@ app.post('/disagree/:id', require_login, function(req, res) {
 
 app.post('/newsworthy/:id', require_login, function(req, res) {
 
-});
-
-app.post('/thread/:id', require_login, function(req, res) {
-  var id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    res.send('');
-    return;
-  }
-  makePost(id, req, function() {
-    getThread(id, req, function(context) {
-      res.send('thread', context);
-    });
-  });
 });
 
 function makePost(id, req, cb) {
