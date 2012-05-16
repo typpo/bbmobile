@@ -27,6 +27,15 @@ function loadThread(id) {
   $.mobile.changePage('/thread/' + id);
 }
 
+function adn(verb, id) {
+  $.post('/adn/' + verb + '/' + id, {}, function(data) {
+    // fake it
+    var $e = $('#num-' + verb);
+    console.log($e.html());
+    $e.html(parseInt($e.html()) + 1);
+  }, 'text');
+}
+
 /*
  * JavaScript Pretty Date
  * Copyright (c) 2011 John Resig (ejohn.org)

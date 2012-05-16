@@ -7,7 +7,7 @@ var express = require('express')
   , OAuth = require('oauth').OAuth
   , secrets = require('./secrets.js')
 
-require('./minifier.js').makeBundle();
+//require('./minifier.js').makeBundle();
 
 // Express config
 app.set('views', __dirname + '/views');
@@ -208,21 +208,8 @@ app.post('/thread/:id', require_login, function(req, res) {
   });
 });
 
-app.post('/agree/:id', require_login, function(req, res) {
-  makeADN(req.params.id, req, 'agree', function() {
-    res.send('ok');
-  });
-});
-
-app.post('/disagree/:id', require_login, function(req, res) {
-  makeADN(req.params.id, req, 'disagree', function() {
-    res.send('ok');
-  });
-
-});
-
-app.post('/newsworthy/:id', require_login, function(req, res) {
-  makeADN(req.params.id, req, 'newsworthy', function() {
+app.post('/adn/:verb/:id', require_login, function(req, res) {
+  makeADN(req.params.id, req, req.params.verb, function() {
     res.send('ok');
   });
 });
@@ -231,7 +218,7 @@ function makeADN(id, req, verb, cb) {
   var params = {
     id: req.params.id,
   };
-  oa.post("http://www.boredatbaker.com/api/v1/post/agree",
+  oa.post("http://www.boredatbaker.com/api/v1/post/" + verb,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     params,

@@ -12,12 +12,17 @@ div#page-thread(data-role='page')
     p
       span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
       | ...
-      #{orig.postTotalAgrees} agrees / #{orig.postTotalDisagrees} disagrees / #{orig.postTotalNewsworthies} newsworthies
+      <span id="num-agree">#{orig.postTotalAgrees}</span> agrees /
+      <span id="num-disagree">#{orig.postTotalDisagrees}</span> disagrees /
+      <span id="num-newsworthy">#{orig.postTotalNewsworthies}</span> newsworthies
 
     div(data-role='controlgroup', data-type='horizontal', data-mini='true')
-      a(href='#', data-role='button', data-icon='check') Agree
-      a(href='#', data-role='button', data-icon='minus') Disagree
-      a(href='#', data-role='button', data-icon='plus') Newsworthy
+      - if (true || !orig.hasVotedAgree)
+        a(href='javascript:adn("agree", #{orig.postId})', data-role='button', data-icon='check') Agree
+      - if (true || !orig.hasVotedDisagree)
+        a(href='javascript:adn("disagree", #{orig.postId})', data-role='button', data-icon='minus') Disagree
+      - if (true || !orig.hasVotedNewsworthy)
+        a(href='javascript:adn("newsworthy", #{orig.postId})', data-role='button', data-icon='plus') Newsworthy
 
     - if (replies.length > 0)
       ul#replies(data-role='listview', data-inset='true')

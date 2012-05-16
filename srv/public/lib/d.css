@@ -340,6 +340,11 @@ a.ui-link-inherit {
 	text-decoration: none !important;
 }
 
+a {
+  text-decoration: none;
+
+}
+
 
 /* Active class used as the "on" state across all themes
 -----------------------------------------------------------------------------------------------------------*/
