@@ -8,7 +8,8 @@ div#page-thread(data-role='page')
     a.ui-btn-right(href='javascript:document.location.reload()', data-role='button', data-icon='refresh', data-iconpos='notext') Refresh
 
   div(data-role='content')
-    h3.post-text!= orig.postText.replace(/\\/g, '')
+    h3#post-text.post-text!= orig.postText.replace(/\\/g, '')
+    <script>$('#post-text').html(parseAndLinkURLs($('#post-text').text()));</script>
     p
       span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
       | ...

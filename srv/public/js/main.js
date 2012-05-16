@@ -50,6 +50,17 @@ function loadMore() {
   });
 }
 
+function parseAndLinkURLs(text) {
+  var expression = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
+  var regex = new RegExp(expression);
+
+  var res = regex.exec(text);
+  if (res.length > 0 && res[0]) {
+    text = text.replace(res[0], '<a href="' + res[0] + '" rel="external" target="_blank">' + res[0] + '</a>');
+  }
+  return text;
+}
+
 /*
  * JavaScript Pretty Date
  * Copyright (c) 2011 John Resig (ejohn.org)
