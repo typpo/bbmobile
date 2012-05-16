@@ -7,6 +7,8 @@ var express = require('express')
   , OAuth = require('oauth').OAuth
   , secrets = require('./secrets.js')
 
+require('./minifier.js').makeBundle();
+
 // Express config
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');

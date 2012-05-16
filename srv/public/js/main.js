@@ -1,4 +1,3 @@
-
 $(function() {
   $(document).bind("mobileinit", function(){
     $.mobile.buttonMarkup.hoverDelay = 0;
@@ -10,6 +9,7 @@ $(function() {
     $('.prettydate').prettyDate();
   }, 5000);
 
+  /*
   var lastUpdated = new Date().getTime();
   setInterval(function() {
     $.getJSON('/posts/since/' + lastUpdated, function(data) {
@@ -19,6 +19,7 @@ $(function() {
     });
     lastUpdated = new Date().getTime();
   }, 30000);
+  */
 });
 
 function loadThread(id) {
