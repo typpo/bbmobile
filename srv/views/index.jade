@@ -10,3 +10,6 @@ div#page-main(data-role='page', data-dom-cache='true')
     ul#posts(data-role='listview')
       - each post in data
         include post
+
+    div(style='text-align:center')
+      h3(style='text-decoration:underline', onClick='loadMore()') Load More

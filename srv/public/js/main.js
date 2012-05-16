@@ -9,7 +9,6 @@ $(function() {
     $('.prettydate').prettyDate();
   }, 5000);
 
-  /*
   var lastUpdated = new Date().getTime();
   setInterval(function() {
     $.getJSON('/posts/since/' + lastUpdated, function(data) {
@@ -19,7 +18,6 @@ $(function() {
     });
     lastUpdated = new Date().getTime();
   }, 30000);
-  */
 });
 
 function loadThread(id) {
@@ -34,6 +32,11 @@ function adn(verb, id) {
     console.log($e.html());
     $e.html(parseInt($e.html()) + 1);
   }, 'text');
+}
+
+function loadMore() {
+
+
 }
 
 /*

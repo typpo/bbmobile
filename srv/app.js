@@ -91,8 +91,8 @@ app.get('/login', function(req, res) {
   })
 });
 
-function getPosts(req, cb) {
-  oa.get("http://www.boredatbaker.com/api/v1/posts",
+function getPosts(req, page, cb) {
+  oa.get("http://www.boredatbaker.com/api/v1/posts?page=" + page,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
@@ -136,7 +136,7 @@ function getThread(id, req, cb) {
 }
 
 app.get('/posts/since/:since', require_login, function(req, res) {
-  getPosts(req, function(feed) {
+  getPosts(req, 1, function(feed) {
     var since = parseInt(req.params.since);
     if (since > 0) {
       // Filter out any posts before this timestamp
@@ -166,7 +166,16 @@ app.get('/posts/since/:since', require_login, function(req, res) {
 });
 
 app.get('/posts', require_login, function(req, res) {
-  getPosts(req, function(feed) {
+  getPosts(req, 1, function(feed) {
+    res.render('index', {
+      data: feed,
+      reply_context: -1,
+    });
+  });
+});
+
+app.get('/posts/:page', require_login, function(req, res) {
+  getPosts(req, req.params.page, function(feed) {
     res.render('index', {
       data: feed,
       reply_context: -1,
@@ -176,7 +185,7 @@ app.get('/posts', require_login, function(req, res) {
 
 app.post('/posts', require_login, function(req, res) {
   makePost(-1, req, function() {
-    getPosts(req, function(feed) {
+    getPosts(req, 1, function(feed) {
       res.render('index', {
         data: feed,
         reply_context: -1,
