@@ -2,8 +2,8 @@ li(data-theme='#{post.postTotalReplies < 5 ? 'a' : 'e'}', onClick='loadThread(#{
   h3.post-text!= post.postText.replace(/\\/g, '')
   p
     span.prettydate.post-date(title='#{post.postCreated.replace(' ','T')}')
-    | ...
-    #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
+    | -
+    span(style='font-size:10px') #{post.postTotalAgrees} agrees / #{post.postTotalDisagrees} disagrees / #{post.postTotalNewsworthies} newsworthies
   - if (post.postTotalReplies > 0)
     p
       span.ui-li-count #{post.postTotalReplies}

@@ -10,9 +10,9 @@ div#page-thread(data-role='page')
   div(data-role='content')
     h3#post-text.post-text!= orig.postText.replace(/\\/g, '')
     <script>$('#post-text').html(parseAndLinkURLs($('#post-text').text()));</script>
-    p
+    p(style='font-size:12px')
       span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
-      | ...
+      | -
       <span id="num-agree">#{orig.postTotalAgrees}</span> agrees /
       <span id="num-disagree">#{orig.postTotalDisagrees}</span> disagrees /
       <span id="num-newsworthy">#{orig.postTotalNewsworthies}</span> newsworthies
