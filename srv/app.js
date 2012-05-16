@@ -147,19 +147,11 @@ app.get('/posts/since/:since', require_login, function(req, res) {
       });
     }
 
-    var html = '';
-    _.map(feed, function(post) {
-      tpl = fs.readFileSync(path.join(__dirname, 'views/post.jade'), 'utf8');
-      tpl = jade.compile(tpl, { pretty: false, filename: 'views/post.jade' });
-      var addhtml = tpl({ post: post });
-      html += addhtml;
-    });
-
     var changed = {};
     // TODO need to find any changes..
 
     res.send({
-      add: html,
+      add: feedJSONToHTML(feed),
       changed: changed,
     });
   });
@@ -174,11 +166,10 @@ app.get('/posts', require_login, function(req, res) {
   });
 });
 
-app.get('/posts/:page', require_login, function(req, res) {
+app.get('/posts/:page.json', require_login, function(req, res) {
   getPosts(req, req.params.page, function(feed) {
-    res.render('index', {
-      data: feed,
-      reply_context: -1,
+    res.send({
+      add: feedJSONToHTML(feed),
     });
   });
 });
@@ -257,6 +248,18 @@ function makePost(id, req, cb) {
       console.error(data);
       cb();
     });
+}
+
+
+function feedJSONToHTML(feed) {
+  var html = '';
+  _.map(feed, function(post) {
+    tpl = fs.readFileSync(path.join(__dirname, 'views/post.jade'), 'utf8');
+    tpl = jade.compile(tpl, { pretty: false, filename: 'views/post.jade' });
+    var addhtml = tpl({ post: post });
+    html += addhtml;
+  });
+  return html;
 }
 
 var port = process.env.PORT || 10000;

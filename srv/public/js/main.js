@@ -34,9 +34,20 @@ function adn(verb, id) {
   }, 'text');
 }
 
+var page = 1;
 function loadMore() {
+  $('#loadmore').hide();
+  ++page;
+  $.mobile.showPageLoadingMsg('show');
+  $.getJSON('/posts/' + page + '.json', function(data) {
+    $(data.add).hide().appendTo('#posts').fadeIn();
+    $('#posts').listview('refresh');
+    $('.prettydate').prettyDate();
+    $('#loadmore').show();
+    $.mobile.hidePageLoadingMsg('hide');
+    $(document).scrollTop($(document).scrollTop() + 100);
 
-
+  });
 }
 
 /*
