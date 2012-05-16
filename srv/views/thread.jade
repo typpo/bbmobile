@@ -1,6 +1,9 @@
 div#page-thread(data-role='page')
   div(data-role='header')
-    a(href='#', data-rel='back', data-icon='arrow-l') Back
+    -if (just_posted)
+      a(href='javascript:history.go(-2);', data-icon='arrow-l') Back
+    -else
+      a(href='/posts', data-rel='back', data-icon='arrow-l') Back
     h1 Thread view
     a.ui-btn-right(href='javascript:document.location.reload()', data-role='button', data-icon='refresh', data-iconpos='notext') Refresh
 

@@ -63,3 +63,22 @@ jQuery.fn.prettyDate = function(){
       jQuery(this).text( date );
   });
 };
+
+/*
+function goBack2(){
+  var i = $.mobile.urlHistory.activeIndex-1;
+  if (i > 1) {
+    console.log(
+
+  }
+  for (var i = ; i>=0; i--) {
+
+  }
+
+  var previousPage = $.mobile.activePage.data('ui.prevPage');
+  if(typeof previousPage.prevObject[0]!='undefined'){
+    previousPage = $.mobile.activePage.data('ui.prevPage');
+    $.mobile.changePage(previousPage.prevObject[0].id, 'slide', true, true);
+  }
+}
+*/

@@ -102,6 +102,7 @@ function getThread(id, req, cb) {
       orig: indiv_post,
       replies: replies ? replies : [],
       reply_context: id,
+      just_posted: false,
     });
   });
 
@@ -193,6 +194,7 @@ app.post('/thread/:id', require_login, function(req, res) {
   }
   makePost(id, req, function() {
     getThread(id, req, function(context) {
+      context.just_posted = true; // so back button works correctly
       res.render('thread', context);
     });
   });
