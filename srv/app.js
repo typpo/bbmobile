@@ -91,50 +91,6 @@ app.get('/login', function(req, res) {
   })
 });
 
-function getPosts(req, page, cb) {
-  oa.get("http://www.boredatbaker.com/api/v1/posts?page=" + page,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      var feed = JSON.parse(data);
-      cb(feed);
-    });
-}
-
-function getThread(id, req, cb) {
-  var indiv_post, replies;
-  var complete = _.after(2, function() {
-    cb({
-      orig: indiv_post,
-      replies: replies ? replies : [],
-      reply_context: id,
-      just_posted: false,
-    });
-  });
-
-  // Fetch actual post
-  oa.get("http://www.boredatbaker.com/api/v1/post?id="+id,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      indiv_post = JSON.parse(data);
-      if (indiv_post.error)
-        indiv_post = null;
-      complete();
-    });
-
-  // And fetch replies
-  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+id,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      replies = JSON.parse(data);
-      if (replies.error)
-        replies = null;
-      complete();
-    });
-}
-
 app.get('/posts/since/:since', require_login, function(req, res) {
   getPosts(req, 1, function(feed) {
     var since = parseInt(req.params.since);
@@ -214,17 +170,47 @@ app.post('/adn/:verb/:id', require_login, function(req, res) {
   });
 });
 
-function makeADN(id, req, verb, cb) {
-  var params = {
-    id: req.params.id,
-  };
-  oa.post("http://www.boredatbaker.com/api/v1/post/" + verb,
+function getPosts(req, page, cb) {
+  oa.get("http://www.boredatbaker.com/api/v1/posts?page=" + page,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
-    params,
     function (error, data, response) {
-      console.error(data);
-      cb();
+      var feed = JSON.parse(data);
+      cb(feed);
+    });
+}
+
+function getThread(id, req, cb) {
+  var indiv_post, replies;
+  var complete = _.after(2, function() {
+    cb({
+      orig: indiv_post,
+      replies: replies ? replies : [],
+      reply_context: id,
+      just_posted: false,
+    });
+  });
+
+  // Fetch actual post
+  oa.get("http://www.boredatbaker.com/api/v1/post?id="+id,
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      indiv_post = JSON.parse(data);
+      if (indiv_post.error)
+        indiv_post = null;
+      complete();
+    });
+
+  // And fetch replies
+  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+id,
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      replies = JSON.parse(data);
+      if (replies.error)
+        replies = null;
+      complete();
     });
 }
 
@@ -241,6 +227,20 @@ function makePost(id, req, cb) {
   if (id > -1) params.id = id;
 
   oa.post("http://www.boredatbaker.com/api/v1/post",
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    params,
+    function (error, data, response) {
+      console.error(data);
+      cb();
+    });
+}
+
+function makeADN(id, req, verb, cb) {
+  var params = {
+    id: req.params.id,
+  };
+  oa.post("http://www.boredatbaker.com/api/v1/post/" + verb,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     params,
