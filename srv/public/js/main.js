@@ -26,10 +26,11 @@ function loadThread(id) {
 }
 
 function adn(verb, id) {
+  $.mobile.showPageLoadingMsg('show');
   $.post('/adn/' + verb + '/' + id, {}, function(data) {
     // fake it
+    $.mobile.hidePageLoadingMsg('hide');
     var $e = $('#num-' + verb);
-    console.log($e.html());
     $e.html(parseInt($e.html()) + 1);
   }, 'text');
 }
