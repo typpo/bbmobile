@@ -55,7 +55,7 @@ function parseAndLinkURLs(text) {
   var regex = new RegExp(expression);
 
   var res = regex.exec(text);
-  if (res.length > 0 && res[0]) {
+  if (res && res.length > 0 && res[0]) {
     text = text.replace(res[0], '<a href="' + res[0] + '" rel="external" target="_blank">' + res[0] + '</a>');
   }
   return text;
