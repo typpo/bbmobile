@@ -44,6 +44,10 @@ app.get('/', require_login, function(req, res) {
   res.redirect('/posts');
 });
 
+app.get('/search', require_login, function(req, res) {
+  res.render('search');
+});
+
 app.get('/oauth_cb', function(req, res) {
   oa.getOAuthAccessToken(
     req.session.oauth_token,
@@ -195,6 +199,8 @@ app.post('/thread/:id', require_login, function(req, res) {
   makePost(id, req, function() {
     getThread(id, req, function(context) {
       context.just_posted = true; // so back button works correctly
+      // the bug still exists if you navigate further down after making
+      // a post, instead of hitting back.
       res.render('thread', context);
     });
   });
