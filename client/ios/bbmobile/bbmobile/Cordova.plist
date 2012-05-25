@@ -19,11 +19,17 @@
 	<key>AllowInlineMediaPlayback</key>
 	<false/>
 	<key>OpenAllWhitelistURLsInWebView</key>
-	<false/>
+	<true/>
 	<key>ExternalHosts</key>
 	<array>
-    <string>ianww.com*</string>
-  </array>
+		<string>ianww.com:10000*</string>
+		<string>ianww.com*</string>
+		<string>www.ianww.com*</string>
+		<string>www.ianww.com:10000*</string>
+		<string>thoughtposter.com*</string>
+		<string>www.thoughtposter.com*</string>
+		<string>ajax.googleapis.com*</string>
+	</array>
 	<key>Plugins</key>
 	<dict>
 		<key>Compass</key>

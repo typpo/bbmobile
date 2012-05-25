@@ -40,7 +40,6 @@ function require_login(req, res, next) {
   next();
 };
 
-
 app.get('/', require_login, function(req, res) {
   res.redirect('/posts');
 });
@@ -69,7 +68,6 @@ app.get('/oauth_cb', function(req, res) {
       }
     });
 });
-
 
 app.get('/login', function(req, res) {
   oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
