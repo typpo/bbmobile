@@ -47,6 +47,13 @@
 	function onDeviceReady()
 	{
 		// do your thing!
+        
+        // check internet
+        var ctype = navigator.network.connection.type;
+        if (ctype === Connection.UNKNOWN || ctype === Connection.NONE)
+                                        navigator.notification.alert("Sorry, we couldn't find a working internet connection.  Please double-check and try again later.");
+
+        
 		//navigator.notification.alert("Cordova is working")
         document.location.href = 'http://ianww.com:10000';
 	}
