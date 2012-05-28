@@ -1,0 +1,15 @@
+div#page-main(data-role='page')
+  div(data-role='header')
+    a.ui-btn-left(href='javascript:window.location.reload();', data-role='button', data-icon='search', data-iconpos='notext') Search
+    h1 b@mobile
+    a.ui-btn-right(href='/posts', data-role='button', data-icon='delete', data-iconpos='notext') Home
+
+  div(data-role='content')
+    ul#posts(data-role='listview', style='margin-top:15px')
+      - each post in data
+        include post
+
+    //
+      div(style='text-align:center;padding-top:20px;')
+        h3#loadmore(style='text-decoration:underline', onClick='loadMoreSearch()') Load More
+<script>mixpanel.track('searched');</script>

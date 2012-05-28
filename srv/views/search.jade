@@ -1,4 +1,5 @@
 div#page-search(data-role='page', data-rel='dialog')
   form(action='/search', method='post')
-    <input type="search" name="search" id="search" value="" />
+    <input type="search" name="query" id="query" value="" />
+<script>mixpanel.track('search');</script>
 

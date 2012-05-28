@@ -6,4 +6,5 @@ script
     $.post(document.location.href, {text: $('#text').val()}, function(data) {
       document.location.reload();
     }, 'html');
+    mixpanel.track('post', {href: document.location.href});
   }

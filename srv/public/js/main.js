@@ -4,7 +4,6 @@ $(document).bind("mobileinit", function(){
 });
 
 $(function() {
-
   $('.prettydate').prettyDate();
   setInterval(function() {
     $('.prettydate').prettyDate();
@@ -24,6 +23,7 @@ $(function() {
 function loadThread(id) {
   // performance workaround
   $.mobile.changePage('/thread/' + id);
+  mixpanel.track('thread');
 }
 
 function adn(verb, id) {
@@ -34,6 +34,7 @@ function adn(verb, id) {
     var $e = $('#num-' + verb);
     $e.html(parseInt($e.html()) + 1);
   }, 'text');
+  mixpanel.track('adn');
 }
 
 var page = 1;
@@ -48,8 +49,23 @@ function loadMore() {
     $('#loadmore').show();
     $.mobile.hidePageLoadingMsg('hide');
     $(document).scrollTop($(document).scrollTop() + 100);
-
   });
+  mixpanel.track('more');
+}
+
+function loadMoreSearch() {
+  $('#loadmore').hide();
+  ++page;
+  $.mobile.showPageLoadingMsg('show');
+  $.getJSON('/search/' + page + '.json', function(data) {
+    $(data.add).hide().appendTo('#posts').fadeIn();
+    $('#posts').listview('refresh');
+    $('.prettydate').prettyDate();
+    $('#loadmore').show();
+    $.mobile.hidePageLoadingMsg('hide');
+    $(document).scrollTop($(document).scrollTop() + 100);
+  });
+  mixpanel.track('more search');
 }
 
 /*

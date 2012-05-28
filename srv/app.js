@@ -57,6 +57,30 @@ app.get('/search', require_login, function(req, res) {
   res.render('search');
 });
 
+app.post('/search', require_login, function(req, res) {
+  getSearch(req, req.body.query, 1, function(feed) {
+      res.render('searched', {
+        data: feed,
+      });
+  });
+});
+
+app.get('/search/:query/:page.json', require_login, function(req, res) {
+  getSearch(req, req.param.query, req.param.page, function(feed) {
+    res.send(feed);
+  });
+});
+
+function getSearch(req, query, page, cb) {
+  oa.get('http://' + API_ENDPOINT + 'search?q=' + query + '&page=' + page,
+    req.session.oauth_access_token,
+    req.session.oauth_access_token_secret,
+    function (error, data, response) {
+      var feed = JSON.parse(data);
+      cb(feed);
+    });
+}
+
 app.get('/oauth_cb', function(req, res) {
   oa.getOAuthAccessToken(
     req.session.oauth_token,
