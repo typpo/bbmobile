@@ -32,7 +32,7 @@ var oa = new OAuth('https://' + API_ENDPOINT + 'oauth/request_token',
   secrets.key,
   secrets.secret,
   "1.0",
-  "http://boredphone.com/oauth_cb",
+  "http://www.boredphone.com/oauth_cb",
   "HMAC-SHA1");
 
 // Caching
@@ -73,7 +73,7 @@ app.get('/oauth_cb', function(req, res) {
         // store the access token in the session
         req.session.oauth_access_token = oauth_access_token;
         req.session.oauth_access_token_secret = oauth_access_token_secret;
-        res.redirect('/');
+        res.redirect('/posts');
       }
     });
 });
