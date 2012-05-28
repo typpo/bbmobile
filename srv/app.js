@@ -85,6 +85,7 @@ app.get('/login', function(req, res) {
       req.session.oauth_token_secret = oauth_token_secret;
 
       // redirect the user to authorize the token
+      // NB manually pointed to thoughtposter right now, because the normal endpoint has a broken SSL cert
       res.redirect("https://www.thoughtposter.com/api/v1/oauth/authorize?oauth_token="+oauth_token);
     }
   })
@@ -102,8 +103,7 @@ app.get('/posts/since/:since', require_login, function(req, res) {
       });
     }
 
-    var changed = {};
-    // TODO need to find any changes..
+    var changed = {}; // placeholder
 
     res.send({
       add: feedJSONToHTML(feed),
