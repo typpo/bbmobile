@@ -8,25 +8,28 @@ div#page-thread(data-role='page')
     a.ui-btn-right(href='javascript:document.location.reload()', data-role='button', data-icon='refresh', data-iconpos='notext') Refresh
 
   div(data-role='content')
-    h3#post-text.post-text!= orig.postText.replace(/\\/g, '')
-    p(style='font-size:12px')
-      span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
-      | -
-      <span id="num-agree">#{orig.postTotalAgrees}</span> agrees /
-      <span id="num-disagree">#{orig.postTotalDisagrees}</span> disagrees /
-      <span id="num-newsworthy">#{orig.postTotalNewsworthies}</span> newsworthies
+    - if (orig && orig.postText)
+      h3#post-text.post-text!= orig.postText.replace(/\\/g, '')
+        p(style='font-size:12px')
+          span.prettydate.post-date(title='#{orig.postCreated.replace(' ','T')}')
+          | -
+          <span id="num-agree">#{orig.postTotalAgrees}</span> agrees /
+          <span id="num-disagree">#{orig.postTotalDisagrees}</span> disagrees /
+          <span id="num-newsworthy">#{orig.postTotalNewsworthies}</span> newsworthies
 
-    div(data-role='controlgroup', data-type='horizontal', data-mini='true')
-      - if (true || !orig.hasVotedAgree)
-        a(href='javascript:adn("agree", #{orig.postId})', data-role='button', data-icon='check') Agree
-      - if (true || !orig.hasVotedDisagree)
-        a(href='javascript:adn("disagree", #{orig.postId})', data-role='button', data-icon='minus') Disagree
-      - if (true || !orig.hasVotedNewsworthy)
-        a(href='javascript:adn("newsworthy", #{orig.postId})', data-role='button', data-icon='plus') Newsworthy
+        div(data-role='controlgroup', data-type='horizontal', data-mini='true')
+          - if (true || !orig.hasVotedAgree)
+            a(href='javascript:adn("agree", #{orig.postId})', data-role='button', data-icon='check') Agree
+          - if (true || !orig.hasVotedDisagree)
+            a(href='javascript:adn("disagree", #{orig.postId})', data-role='button', data-icon='minus') Disagree
+          - if (true || !orig.hasVotedNewsworthy)
+            a(href='javascript:adn("newsworthy", #{orig.postId})', data-role='button', data-icon='plus') Newsworthy
 
-    - if (replies.length > 0)
-      ul#replies(data-role='listview', data-inset='true')
-        - each post in replies
-          include post
+        - if (replies.length > 0)
+          ul#replies(data-role='listview', data-inset='true')
+            - each post in replies
+              include post
 
-    include write
+        include write
+    - else
+      h3#post-text.post-text <em>[sorry, this post has been deleted]</em>

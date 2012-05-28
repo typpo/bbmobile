@@ -212,7 +212,8 @@ function getThread(id, req, cb, no_cache_replies) {
   var indiv_post, replies;
   var complete = _.after(2, function() {
     // build any links for the post
-    indiv_post.postText = parseAndLinkURLs(indiv_post.postText);
+    if (indiv_post && indiv_post.postText)
+      indiv_post.postText = parseAndLinkURLs(indiv_post.postText);
 
     cb({
       orig: indiv_post,
