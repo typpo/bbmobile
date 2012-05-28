@@ -29,6 +29,10 @@ function adn(verb, id) {
   mixpanel.track('adn');
 }
 
+function doSearch() {
+  $.mobile.changePage('/search/' + $('#query').val());
+}
+
 var page = 1;
 function loadMore() {
   $('#loadmore').hide();
@@ -43,21 +47,6 @@ function loadMore() {
     $(document).scrollTop($(document).scrollTop() + 100);
   });
   mixpanel.track('more');
-}
-
-function loadMoreSearch() {
-  $('#loadmore').hide();
-  ++page;
-  $.mobile.showPageLoadingMsg('show');
-  $.getJSON(window.location.href + '/' + page + '.json', function(data) {
-    $(data.add).hide().appendTo('#posts').fadeIn();
-    $('#posts').listview('refresh');
-    $('.prettydate').prettyDate();
-    $('#loadmore').show();
-    $.mobile.hidePageLoadingMsg('hide');
-    $(document).scrollTop($(document).scrollTop() + 100);
-  });
-  mixpanel.track('more search');
 }
 
 /*

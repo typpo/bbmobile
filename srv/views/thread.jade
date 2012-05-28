@@ -26,7 +26,7 @@ div#page-thread(data-role='page')
             a(href='javascript:adn("newsworthy", #{orig.postId})', data-role='button', data-icon='plus') Newsworthy
 
         - if (replies.length > 0)
-          ul#replies(data-role='listview', data-inset='true')
+          ul#replies(data-role='listview')
             - each post in replies
               include post
 

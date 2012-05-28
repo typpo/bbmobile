@@ -2,9 +2,4 @@ div#page-search(data-role='page', data-rel='dialog')
   form(action='javascript:doSearch();', method='post')
     <input type="search" name="query" id="query" value="" />
 script
-  function doSearch() {
-    $.mobile.changePage('/search/' + $('#query').val());
-  }
-
   mixpanel.track('search');
-

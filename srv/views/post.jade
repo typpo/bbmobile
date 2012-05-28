@@ -1,4 +1,4 @@
-li(data-theme='#{post.postTotalReplies < 5 ? 'a' : 'e'}', onClick='loadThread(#{post.postId});return false;')
+li.pointy(data-theme='#{post.postTotalReplies < 5 ? 'a' : 'e'}', onClick='loadThread(#{post.postId});return false;')
   h3.post-text!= post.postText.replace(/\\/g, '')
   p
     span.prettydate.post-date(title='#{post.postCreated.replace(' ','T')}')
