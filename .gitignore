@@ -2,6 +2,7 @@ secrets.js
 *~
 *.swp
 *.swo
+*.log
 node_modules
 nohup.out
 xcuserdata/
