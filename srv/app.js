@@ -6,6 +6,7 @@ var express = require('express')
   , _ = require('underscore')
   , app = express.createServer()
   , OAuth = require('oauth').OAuth
+  , redisurl = require('redis-url')
   , secrets = require('./secrets.js')
 
 var API_ENDPOINT = 'www.boredatbaker.com/api/v1/';
@@ -33,6 +34,9 @@ var oa = new OAuth('https://' + API_ENDPOINT + 'oauth/request_token',
   "1.0",
   "http://ianww.com:10000/oauth_cb",
   "HMAC-SHA1");
+
+// Caching
+var redis = redisurl.connect(process.env.REDISTOGO_URL || 'redis://localhost:6379');
 
 // App
 
@@ -112,7 +116,7 @@ app.get('/posts/since/:since', require_login, function(req, res) {
       add: feedJSONToHTML(feed),
       changed: changed,
     });
-  });
+  }, true);   // no cache
 });
 
 app.get('/posts', require_login, function(req, res) {
@@ -125,6 +129,7 @@ app.get('/posts', require_login, function(req, res) {
 });
 
 app.get('/posts/:page.json', require_login, function(req, res) {
+  // Used with 'load more' button
   getPosts(req, req.params.page, function(feed) {
     res.send({
       add: feedJSONToHTML(feed),
@@ -172,14 +177,35 @@ app.post('/adn/:verb/:id', require_login, function(req, res) {
   });
 });
 
-function getPosts(req, page, cb) {
-  oa.get('http://' + API_ENDPOINT + 'posts?page=' + page,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      var feed = JSON.parse(data);
+function getPosts(req, page, cb, no_cache) {
+  var redis_page_key = 'bbmobile:page:' + page;
+  function loadPage() {
+    console.log('Refreshing cache entry for', redis_page_key);
+    oa.get('http://' + API_ENDPOINT + 'posts?page=' + page,
+      req.session.oauth_access_token,
+      req.session.oauth_access_token_secret,
+      function (error, data, response) {
+        var feed = JSON.parse(data);
+        redis.setex(redis_page_key, 30, data);  // frontpage cached for 30s
+        cb(feed);
+      });
+  }
+
+  if (no_cache) {
+    loadPage();
+    return;
+  }
+
+  redis.get(redis_page_key, function(err, val) {
+    if (err || !val) {
+      loadPage();
+    }
+    else {
+      console.log('Retrieved', redis_page_key, 'from cache');
+      var feed = JSON.parse(val);
       cb(feed);
-    });
+    }
+  });
 }
 
 function getThread(id, req, cb) {
@@ -197,26 +223,50 @@ function getThread(id, req, cb) {
   });
 
   // Fetch actual post
-  oa.get('http://' + API_ENDPOINT + 'post?id='+id,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      indiv_post = JSON.parse(data);
-      if (indiv_post.error)
-        indiv_post = null;
+  var redis_post_key = 'bbmobile:post:' + id;
+  redis.get(redis_post_key, function(err, val) {
+    if (err || !val) {
+      oa.get('http://' + API_ENDPOINT + 'post?id='+id,
+        req.session.oauth_access_token,
+        req.session.oauth_access_token_secret,
+        function (error, data, response) {
+          indiv_post = JSON.parse(data);
+          if (indiv_post.error)
+            indiv_post = null;
+          else
+            redis.set(redis_post_key, data);
+          complete();
+        });
+    }
+    else {
+      console.log('Retrieved', redis_post_key, 'from cache');
+      indiv_post = JSON.parse(val);
       complete();
-    });
+    }
+  });
 
   // And fetch replies
-  oa.get('http://' + API_ENDPOINT + 'replies?id='+id,
-    req.session.oauth_access_token,
-    req.session.oauth_access_token_secret,
-    function (error, data, response) {
-      replies = JSON.parse(data);
-      if (replies.error)
-        replies = null;
+  var redis_reply_key = 'bbmobile:replies:' + id;
+  redis.get(redis_reply_key, function(err, val) {
+    if (err || !val) {
+      oa.get('http://' + API_ENDPOINT + 'replies?id='+id,
+        req.session.oauth_access_token,
+        req.session.oauth_access_token_secret,
+        function (error, data, response) {
+          replies = JSON.parse(data);
+          if (replies.error)
+            replies = null;
+          else
+            redis.setex(redis_reply_key, 30, data); // replies cached for 30s
+          complete();
+        });
+    }
+    else {
+      console.log('Retrieved', redis_reply_key, 'from cache');
+      replies = JSON.parse(val);
       complete();
-    });
+    }
+  });
 }
 
 function makePost(id, req, cb) {
