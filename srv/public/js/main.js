@@ -1,8 +1,9 @@
+$(document).bind("mobileinit", function(){
+  $.mobile.buttonMarkup.hoverDelay = 0;
+  $.mobile.touchOverflowEnabled = true;
+});
+
 $(function() {
-  $(document).bind("mobileinit", function(){
-    $.mobile.buttonMarkup.hoverDelay = 0;
-    $.mobile.touchOverflowEnabled = true;
-  });
 
   $('.prettydate').prettyDate();
   setInterval(function() {
