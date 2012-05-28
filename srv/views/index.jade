@@ -12,4 +12,13 @@ div#page-main(data-role='page', data-dom-cache='true')
 
     div(style='text-align:center;padding-top:20px;')
       h3#loadmore(style='text-decoration:underline', onClick='loadMore()') Load More
-<script>mixpanel.track('main');</script>
+script
+  setInterval(function() {
+    $.getJSON('/posts/since/' + lastUpdated, function(data) {
+      $(data.add).hide().prependTo('#posts').fadeIn();
+      $('#posts').listview('refresh');
+      $('.prettydate').prettyDate();
+    });
+    lastUpdated = new Date().getTime();
+  }, 30000);
+  mixpanel.track('main');

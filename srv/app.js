@@ -57,8 +57,8 @@ app.get('/search', require_login, function(req, res) {
   res.render('search');
 });
 
-app.post('/search', require_login, function(req, res) {
-  getSearch(req, req.body.query, 1, function(feed) {
+app.get('/search/:query', require_login, function(req, res) {
+  getSearch(req, req.params.query, 1, function(feed) {
       res.render('searched', {
         data: feed,
       });
@@ -66,12 +66,13 @@ app.post('/search', require_login, function(req, res) {
 });
 
 app.get('/search/:query/:page.json', require_login, function(req, res) {
-  getSearch(req, req.param.query, req.param.page, function(feed) {
+  getSearch(req, req.params.query, req.params.page, function(feed) {
     res.send(feed);
   });
 });
 
 function getSearch(req, query, page, cb) {
+  // TODO not working
   oa.get('http://' + API_ENDPOINT + 'search?q=' + query + '&page=' + page,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,

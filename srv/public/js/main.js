@@ -10,14 +10,6 @@ $(function() {
   }, 5000);
 
   var lastUpdated = new Date().getTime();
-  setInterval(function() {
-    $.getJSON('/posts/since/' + lastUpdated, function(data) {
-      $(data.add).hide().prependTo('#posts').fadeIn();
-      $('#posts').listview('refresh');
-      $('.prettydate').prettyDate();
-    });
-    lastUpdated = new Date().getTime();
-  }, 30000);
 });
 
 function loadThread(id) {
@@ -57,7 +49,7 @@ function loadMoreSearch() {
   $('#loadmore').hide();
   ++page;
   $.mobile.showPageLoadingMsg('show');
-  $.getJSON('/search/' + page + '.json', function(data) {
+  $.getJSON(window.location.href + '/' + page + '.json', function(data) {
     $(data.add).hide().appendTo('#posts').fadeIn();
     $('#posts').listview('refresh');
     $('.prettydate').prettyDate();
