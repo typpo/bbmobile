@@ -2,7 +2,3 @@
   /* Fixes jqm blinking bug */
   -webkit-backface-visibility: hidden;
 }
-
-.scrollme {
-  -webkit-overflow-scrolling: touch;
-}
