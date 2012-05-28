@@ -1,4 +1,5 @@
 var express = require('express')
+  , connect = require('connect')
   , fs = require('fs')
   , path = require('path')
   , jade = require('jade')
