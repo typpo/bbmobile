@@ -32,7 +32,7 @@ var oa = new OAuth('https://' + API_ENDPOINT + 'oauth/request_token',
   secrets.key,
   secrets.secret,
   "1.0",
-  "http://ianww.com:10000/oauth_cb",
+  "http://boredphone.com/oauth_cb",
   "HMAC-SHA1");
 
 // Caching
