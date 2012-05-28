@@ -186,6 +186,9 @@ function getPosts(req, page, cb) {
 function getThread(id, req, cb) {
   var indiv_post, replies;
   var complete = _.after(2, function() {
+    // build any links for the post
+    indiv_post.postText = parseAndLinkURLs(indiv_post.postText);
+
     cb({
       orig: indiv_post,
       replies: replies ? replies : [],
@@ -264,6 +267,18 @@ function feedJSONToHTML(feed) {
   });
   return html;
 }
+
+function parseAndLinkURLs(text) {
+  var expression = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
+  var regex = new RegExp(expression);
+
+  var res = regex.exec(text);
+  if (res && res.length > 0 && res[0]) {
+    text = text.replace(res[0], '<a href="' + res[0] + '" rel="external" target="_blank">' + res[0] + '</a>');
+  }
+  return text;
+}
+
 
 var port = process.env.PORT || 10000;
 app.listen(port);
