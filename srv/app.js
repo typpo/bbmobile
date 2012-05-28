@@ -1,5 +1,5 @@
 var express = require('express')
-  , connect = require('connect')
+  , gzippo = require('gzippo')
   , fs = require('fs')
   , path = require('path')
   , jade = require('jade')
@@ -19,8 +19,9 @@ app.set('view engine', 'jade');
 app.use(express.cookieParser());
 app.use(express.static(__dirname + '/public'));
 app.use(express.bodyParser());
+app.use(gzippo.staticGzip(__dirname + '/public'));
+
 app.use(express.favicon(__dirname + '/public/favicon.ico'));
-app.use(connect.compress());
 //app.use(express.session({secret: "asdklasl3"}));
 var RedisStore = require('connect-redis')(express);
 app.use(express.session({secret: "barkbark3. barkbarkbark", store: new RedisStore}));
