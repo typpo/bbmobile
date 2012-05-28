@@ -144,7 +144,7 @@ app.post('/posts', require_login, function(req, res) {
         data: feed,
         reply_context: -1,
       });
-    });
+    }, true);  // no cache
   });
 });
 
@@ -167,7 +167,7 @@ app.post('/thread/:id', require_login, function(req, res) {
       // the bug still exists if you navigate further down after making
       // a post, instead of hitting back.
       res.render('thread', context);
-    });
+    }, true); // no cache
   });
 });
 
@@ -208,7 +208,7 @@ function getPosts(req, page, cb, no_cache) {
   });
 }
 
-function getThread(id, req, cb) {
+function getThread(id, req, cb, no_cache_replies) {
   var indiv_post, replies;
   var complete = _.after(2, function() {
     // build any links for the post
@@ -247,26 +247,35 @@ function getThread(id, req, cb) {
 
   // And fetch replies
   var redis_reply_key = 'bbmobile:replies:' + id;
-  redis.get(redis_reply_key, function(err, val) {
-    if (err || !val) {
-      oa.get('http://' + API_ENDPOINT + 'replies?id='+id,
-        req.session.oauth_access_token,
-        req.session.oauth_access_token_secret,
-        function (error, data, response) {
-          replies = JSON.parse(data);
-          if (replies.error)
-            replies = null;
-          else
-            redis.setex(redis_reply_key, 30, data); // replies cached for 30s
-          complete();
-        });
-    }
-    else {
-      console.log('Retrieved', redis_reply_key, 'from cache');
-      replies = JSON.parse(val);
-      complete();
-    }
-  });
+  function loadReplies() {
+    oa.get('http://' + API_ENDPOINT + 'replies?id='+id,
+      req.session.oauth_access_token,
+      req.session.oauth_access_token_secret,
+      function (error, data, response) {
+        replies = JSON.parse(data);
+        if (replies.error)
+          replies = null;
+        else
+          redis.setex(redis_reply_key, 30, data); // replies cached for 30s
+        complete();
+      });
+  }
+
+  if (no_cache_replies) {
+    loadReplies();
+  }
+  else {
+    redis.get(redis_reply_key, function(err, val) {
+      if (err || !val) {
+        loadReplies();
+      }
+      else {
+        console.log('Retrieved', redis_reply_key, 'from cache');
+        replies = JSON.parse(val);
+        complete();
+      }
+    });
+  }
 }
 
 function makePost(id, req, cb) {
