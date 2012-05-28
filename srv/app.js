@@ -7,6 +7,8 @@ var express = require('express')
   , OAuth = require('oauth').OAuth
   , secrets = require('./secrets.js')
 
+var API_ENDPOINT = 'www.boredatbaker.com/api/v1/';
+
 //require('./minifier.js').makeBundle();
 
 // Express config
@@ -21,13 +23,13 @@ var RedisStore = require('connect-redis')(express);
 app.use(express.session({secret: "barkbark3. barkbarkbark", store: new RedisStore}));
 
 // Oauth config
-var oa = new OAuth("https://www.boredatbaker.com/api/v1/oauth/request_token",
-            "https://www.boredatbaker.com/api/v1/oauth/access_token",
-            secrets.key,
-            secrets.secret,
-            "1.0",
-            "http://ianww.com:10000/oauth_cb",
-            "HMAC-SHA1");
+var oa = new OAuth('https://' + API_ENDPOINT + 'oauth/request_token',
+  'https://' + API_ENDPOINT + 'oauth/access_token',
+  secrets.key,
+  secrets.secret,
+  "1.0",
+  "http://ianww.com:10000/oauth_cb",
+  "HMAC-SHA1");
 
 // App
 
@@ -168,7 +170,7 @@ app.post('/adn/:verb/:id', require_login, function(req, res) {
 });
 
 function getPosts(req, page, cb) {
-  oa.get("http://www.boredatbaker.com/api/v1/posts?page=" + page,
+  oa.get('http://' + API_ENDPOINT + 'posts?page=' + page,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
@@ -189,7 +191,7 @@ function getThread(id, req, cb) {
   });
 
   // Fetch actual post
-  oa.get("http://www.boredatbaker.com/api/v1/post?id="+id,
+  oa.get('http://' + API_ENDPOINT + 'post?id='+id,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
@@ -200,7 +202,7 @@ function getThread(id, req, cb) {
     });
 
   // And fetch replies
-  oa.get("http://www.boredatbaker.com/api/v1/replies?id="+id,
+  oa.get('http://' + API_ENDPOINT + 'replies?id='+id,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     function (error, data, response) {
@@ -223,7 +225,7 @@ function makePost(id, req, cb) {
   };
   if (id > -1) params.id = id;
 
-  oa.post("http://www.boredatbaker.com/api/v1/post",
+  oa.post('http://' + API_ENDPOINT + 'post',
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     params,
@@ -237,7 +239,7 @@ function makeADN(id, req, verb, cb) {
   var params = {
     id: req.params.id,
   };
-  oa.post("http://www.boredatbaker.com/api/v1/post/" + verb,
+  oa.post('http://' + API_ENDPOINT + 'post/' + verb,
     req.session.oauth_access_token,
     req.session.oauth_access_token_secret,
     params,

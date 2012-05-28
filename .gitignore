@@ -4,3 +4,4 @@ secrets.js
 *.swo
 node_modules
 nohup.out
+xcuserdata/
