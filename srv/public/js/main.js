@@ -8,8 +8,6 @@ $(function() {
   setInterval(function() {
     $('.prettydate').prettyDate();
   }, 5000);
-
-  var lastUpdated = new Date().getTime();
 });
 
 function loadThread(id) {

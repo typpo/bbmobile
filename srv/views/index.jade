@@ -13,6 +13,7 @@ div#page-main(data-role='page', data-dom-cache='true')
     div(style='text-align:center;padding-top:20px;')
       h3#loadmore.pointy(style='text-decoration:underline', onClick='loadMore()') Load More
 script
+  var lastUpdated = new Date().getTime();
   setInterval(function() {
     $.getJSON('/posts/since/' + lastUpdated, function(data) {
       $(data.add).hide().prependTo('#posts').fadeIn();
