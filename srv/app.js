@@ -343,6 +343,10 @@ function makeADN(id, req, verb, cb) {
     function (error, data, response) {
       console.error(data);
       cb();
+
+      // invalidate cache
+      var redis_post_key = 'bbmobile:post:' + id;
+      redis.del(redis_post_key);
     });
 }
 
