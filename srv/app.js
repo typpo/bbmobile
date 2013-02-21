@@ -117,6 +117,7 @@ app.get('/login', function(req, res) {
       res.send('There was an error talking to the b@b server');
     }
     else {
+      console.log(error, oauth_token, oauth_token_secret, results);
       // store the tokens in the session
       req.session.oa = oa;
       req.session.oauth_token = oauth_token;
